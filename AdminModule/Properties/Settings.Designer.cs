@@ -26,7 +26,7 @@ namespace AdminModule.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-EIS8P32;Initial Catalog=adminpanel;Integrated Security=True")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=DESKTOP-EIS8P32;Initial Catalog=adminpanel;Integrated Security=False")]
         public string adminpanelConnectionString {
             get {
                 return ((string)(this["adminpanelConnectionString"]));
@@ -36,11 +36,22 @@ namespace AdminModule.Properties {
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=13.229.231.75\\;Initial Catalog=FASTERP;Persist Security Info=True;Use" +
-            "r ID=iptuser")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=13.229.231.75;Initial Catalog=fasterp;User ID=iptuser;Password=Iptdem" +
+            "o123")]
         public string FASTERPConnectionString {
             get {
                 return ((string)(this["FASTERPConnectionString"]));
+            }
+        }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.SpecialSettingAttribute(global::System.Configuration.SpecialSetting.ConnectionString)]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=13.229.231.75\\;Initial Catalog=FASTERP;Persist Security Info=True;Use" +
+            "r ID=iptuser;Password=Iptdemo123")]
+        public string FASTERPConnectionString1 {
+            get {
+                return ((string)(this["FASTERPConnectionString1"]));
             }
         }
     }

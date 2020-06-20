@@ -17,7 +17,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Text;
 using System.Net.Http.Headers;
-
+using Newtonsoft.Json;
 
 namespace AdminModule
 {
@@ -62,9 +62,8 @@ namespace AdminModule
             {
                 if(edit == 0)//////////////// for save
                 {
-                    
-                        //obj.fa_insertFacultyWithoutImage(nameTxt.Text,usernameTxt.Text,passwordTxt.Text,cnTxt.Text,Convert.ToInt32(roleDD.SelectedValue.ToString()));
-                        obj.SubmitChanges();
+
+                        addData();
                         MainClass.ShowMSG(nameTxt.Text + " Added Successfully", "Success....", "Success");
                         MainClass.disable_reset(panel6);
                         loadData();
@@ -82,6 +81,24 @@ namespace AdminModule
                    
                 }
             }
+        }
+        public async void addData()
+        {
+            List<Employee> emp = new List<Employee>();
+            emp.Add(new Employee { EmpName = nameTxt.Text, Email = usernameTxt.Text, MobileNumber = cnTxt.Text, DesignationID = Convert.ToInt32(roleDD.SelectedValue.ToString()), DepartmentID = Convert.ToInt32(departDD.SelectedValue.ToString()), EPassword = passwordTxt.Text });
+            var json = JsonConvert.SerializeObject(emp);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage result = await client.PostAsync("admin/AddFaculty/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+            }
+
         }
         public async void loadData()
         {
@@ -134,7 +151,8 @@ namespace AdminModule
                 if (dr == DialogResult.Yes)
                 {
                     //obj.fa_deleteFaculty(facultyID);
-                    obj.SubmitChanges();
+                    //obj.SubmitChanges();
+                    deleteData();
                     MainClass.ShowMSG(nameTxt.Text + " Delete Successfully", "Success.....", "Success");
                     MainClass.disable_reset(panel6);
                     loadData();
@@ -142,7 +160,24 @@ namespace AdminModule
 
             }
         }
+        public async Task deleteData()
+        {
+            var json = JsonConvert.SerializeObject(new employees { EmpID = facultyID });
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var client = new HttpClient())
 
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                HttpResponseMessage result = await client.PostAsync("admin/DeleteFaculty/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+
+
+            }
+        }
         public override void viewBtn_Click(object sender, EventArgs e)
         {
             loadData();

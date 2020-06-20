@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -50,8 +53,9 @@ namespace AdminModule
             {
                 if(edit == 0) /////////// add
                 {
+                    addData();
                     //obj.st_insertStudent(sName_txt.Text, sEmail_txt.Text, sMobileNum_txt.Text, sRollNumber_txt.Text, spassword_txt.Text, Convert.ToInt32(sbatchDD.SelectedValue.ToString()), Convert.ToInt32(sdepartDD.SelectedValue.ToString()));
-                    obj.SubmitChanges();
+                    //obj.SubmitChanges();
                     MainClass.ShowMSG(sName_txt.Text + " Added Successfully", "Success....", "Success");
                     MainClass.disable_reset(panel6);
                     loadData();
@@ -59,14 +63,31 @@ namespace AdminModule
                 else if(edit == 1) ////////// update
                 {
                    // obj.st_updateStudent(sName_txt.Text, sEmail_txt.Text, sMobileNum_txt.Text, sRollNumber_txt.Text, spassword_txt.Text, Convert.ToInt32(sbatchDD.SelectedValue.ToString()), Convert.ToInt32(sdepartDD.SelectedValue.ToString()), studentID);
-                    obj.SubmitChanges();
+                    //obj.SubmitChanges();
                     MainClass.ShowMSG(sName_txt.Text + " Updated Successfully", "Success....", "Success");
                     MainClass.disable_reset(panel6);
                     loadData();
                 }
             }
         }
+        public async void addData()
+        {
+            List<StudentStn> stnd = new List<StudentStn>();
+            stnd.Add(new StudentStn { SName = sName_txt.Text, Email = sEmail_txt.Text,MobileNumber= sMobileNum_txt.Text,RollNumber = sRollNumber_txt.Text,SPassword = spassword_txt.Text,BatchID = Convert.ToInt32(sbatchDD.SelectedValue.ToString()), ProgrammeID = Convert.ToInt32(sdepartDD.SelectedValue.ToString()) ,CandidateID = 2});
+            var json = JsonConvert.SerializeObject(stnd);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
 
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage result = await client.PostAsync("admin/AddStudent/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+            }
+
+        }
         public override void deleteBtn_Click(object sender, EventArgs e)
         {
             if (edit == 1)
@@ -75,7 +96,8 @@ namespace AdminModule
                 if (dr == DialogResult.Yes)
                 {
                     //obj.st_deleteStudent(studentID);
-                    obj.SubmitChanges();
+                    //obj.SubmitChanges();
+                    deleteData();
                     MainClass.ShowMSG(sName_txt.Text + " Delete Successfully", "Success.....", "Success");
                     MainClass.disable_reset(panel6);
                     loadData();
@@ -83,26 +105,54 @@ namespace AdminModule
 
             }
         }
+        public async Task deleteData()
+        {
+            var json = JsonConvert.SerializeObject(new StudentStn { StudentID = studentID });
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var client = new HttpClient())
 
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                HttpResponseMessage result = await client.PostAsync("admin/DeleteStudent/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+
+
+            }
+        }
         public override void viewBtn_Click(object sender, EventArgs e)
         {
             loadData();
         }
         public void loadData()
         {
-            //var result = obj.st_getStudent();
-            sidGV.DataPropertyName = "ID";
-            snameGV.DataPropertyName = "Name";
-            semailGV.DataPropertyName = "Email";
-            spassGV.DataPropertyName = "Password";
-            smobilenumGV.DataPropertyName = "MobNum";
-            srollnumGV.DataPropertyName = "RollNum";
-            batchidGV.DataPropertyName = "BatchID";
-            sbatchGV.DataPropertyName = "BatchYr";
-            progidGV.DataPropertyName = "ProgID";
-            sprogramGV.DataPropertyName = "ProgName";
-            //dataGridView1.DataSource = result;
-            MainClass.sno(dataGridView1, "SnoGV");
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage result = client.GetAsync("admin/getStudents/").Result;
+                var response = result.Content.ReadAsStringAsync().Result;
+
+                sidGV.DataPropertyName = "ID";
+                snameGV.DataPropertyName = "Name";
+                semailGV.DataPropertyName = "Email";
+                spassGV.DataPropertyName = "Password";
+                smobilenumGV.DataPropertyName = "MobNum";
+                srollnumGV.DataPropertyName = "RollNum";
+                batchidGV.DataPropertyName = "BatchID";
+                sbatchGV.DataPropertyName = "BatchYr";
+                progidGV.DataPropertyName = "ProgID";
+                sprogramGV.DataPropertyName = "ProgName";
+                dataGridView1.DataSource = response;
+                MainClass.sno(dataGridView1, "SnoGV");
+            }
+                //var result = obj.st_getStudent();
+            
         }
         protected override void searchTxt_TextChanged(object sender, EventArgs e)
         {
@@ -110,18 +160,18 @@ namespace AdminModule
         }
         public void data_search()
         {
-            //var result = obj.st_searchStudent(searchTxt.Text);
+            var result = obj.st_searchStudent(searchTxt.Text);
             sidGV.DataPropertyName = "ID";
-            snameGV.DataPropertyName = "Name";
-            semailGV.DataPropertyName = "Email";
-            spassGV.DataPropertyName = "Password";
+            snameGV.DataPropertyName = "Sname";
+            semailGV.DataPropertyName = "Semail";
+            spassGV.DataPropertyName = "Spass";
             smobilenumGV.DataPropertyName = "MobNum";
-            srollnumGV.DataPropertyName = "RollNum";
+            srollnumGV.DataPropertyName = "SrollNum";
             batchidGV.DataPropertyName = "BatchID";
-            sbatchGV.DataPropertyName = "BatchYr";
-            progidGV.DataPropertyName = "ProgID";
-            sprogramGV.DataPropertyName = "ProgName";
-            //dataGridView1.DataSource = result;
+            sbatchGV.DataPropertyName = "BatchYrs";
+            progidGV.DataPropertyName = "ProgrammeID";
+            sprogramGV.DataPropertyName = "progName";
+            dataGridView1.DataSource = result;
             MainClass.sno(dataGridView1, "SnoGV");
 
         }

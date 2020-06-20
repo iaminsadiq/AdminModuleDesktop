@@ -1,9 +1,12 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -46,8 +49,9 @@ namespace AdminModule
                 {
                     try
                     {
-                        //obj.co_insertCourse(courname_text.Text, coursecode_txt.Text);
-                        obj.SubmitChanges();
+                        ////obj.co_insertCourse(courname_text.Text, coursecode_txt.Text);
+                        //obj.SubmitChanges();
+                        addData();
                         MainClass.ShowMSG(coursecode_txt.Text + " Added Successfully", "Success....", "Success");
                         MainClass.disable_reset(panel6);
                         loadData();
@@ -64,8 +68,9 @@ namespace AdminModule
                 {
                     try
                     {
-                       // obj.co_updateCourse(courname_text.Text, coursecode_txt.Text, CourseID);
-                        obj.SubmitChanges();
+                       //// obj.co_updateCourse(courname_text.Text, coursecode_txt.Text, CourseID);
+                       // obj.SubmitChanges();
+
                         MainClass.ShowMSG(courname_text.Text + " Updated Successfully", "Success....", "Success");
                         MainClass.disable_reset(panel6);
                         loadData();
@@ -79,14 +84,43 @@ namespace AdminModule
             }
 
         }
+        public async void addData()
+        {
+            List<coursesstn> course = new List<coursesstn>();
+            course.Add(new coursesstn { CourseName = courname_text.Text, CourseCode = coursecode_txt.Text });
+            var json = JsonConvert.SerializeObject(course);
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+
+            using (var client = new HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage result = await client.PostAsync("admin/AddCourse/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+            }
+
+        }
         private void loadData()
         {
-           // var result = obj.co_getCourse();
-            courseIDGV.DataPropertyName = "ID";
-            coursenameGV.DataPropertyName = "Name";
-            coursecodeGV.DataPropertyName = "Code";
-            //dataGridView1.DataSource = result;
-            MainClass.sno(dataGridView1, "SnoGV");
+            using (var client = new System.Net.Http.HttpClient())
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                HttpResponseMessage result = client.GetAsync("admin/getCourses/").Result;
+                var response = result.Content.ReadAsStringAsync().Result;
+                // var result = obj.co_getCourse();
+
+                courseIDGV.DataPropertyName = "CourseID";
+                coursenameGV.DataPropertyName = "CourseName";
+                coursecodeGV.DataPropertyName = "CourseCode";
+                dataGridView1.DataSource = response;
+                MainClass.sno(dataGridView1, "SnoGV");
+            }
+           
         }
         int CourseID;
         public override void deleteBtn_Click(object sender, EventArgs e)
@@ -96,8 +130,9 @@ namespace AdminModule
                 DialogResult dr = MessageBox.Show("Do you really want to delete " + courname_text.Text + "?", "Question.....", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (dr == DialogResult.Yes)
                 {
-                   // obj.co_deleteCourse(CourseID);
-                    obj.SubmitChanges();
+                    //// obj.co_deleteCourse(CourseID);
+                    // obj.SubmitChanges();
+                    dataDelete();
                     MainClass.ShowMSG(courname_text.Text + " Delete Successfully", "Success.....", "Success");
                     MainClass.disable_reset(panel6);
                     loadData();
@@ -105,7 +140,22 @@ namespace AdminModule
 
             }
         }
+        public async void dataDelete()
+        {
+            var json = JsonConvert.SerializeObject(new Courses { CourseID = CourseID });
+            var data = new StringContent(json, Encoding.UTF8, "application/json");
+            using (var client = new HttpClient())
 
+            {
+                client.BaseAddress = new Uri("https://localhost:44380/api/");
+                client.DefaultRequestHeaders.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+
+                HttpResponseMessage result = await client.PostAsync("admin/DeleteStudent/", data);
+                var response = result.Content.ReadAsStringAsync().Result;
+            }
+        }
         public override void viewBtn_Click(object sender, EventArgs e)
         {
             loadData();
@@ -117,12 +167,12 @@ namespace AdminModule
         }
         public void data_search()
         {
-            //var result = obj.co_searchCourse(searchTxt.Text);
+            var result = obj.co_searchCourse(searchTxt.Text);
             courseIDGV.DataPropertyName = "ID";
             coursenameGV.DataPropertyName = "Name";
             coursecodeGV.DataPropertyName = "Code";
 
-            //dataGridView1.DataSource = result;
+            dataGridView1.DataSource = result;
             MainClass.sno(dataGridView1, "SnoGV");
         }
         private void courname_text_TextChanged(object sender, EventArgs e)

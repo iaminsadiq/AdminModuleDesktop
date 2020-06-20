@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.Linq" />
@@ -57,6 +60,7 @@
     <Compile Include="Courses.Designer.cs">
       <DependentUpon>Courses.cs</DependentUpon>
     </Compile>
+    <Compile Include="coursesstn.cs" />
     <Compile Include="Deletion.cs" />
     <Compile Include="employees.cs" />
     <Compile Include="Faculty.cs">
@@ -130,6 +134,7 @@
     <Compile Include="Students.Designer.cs">
       <DependentUpon>Students.cs</DependentUpon>
     </Compile>
+    <Compile Include="StudentStn.cs" />
     <Compile Include="Updation.cs" />
     <EmbeddedResource Include="Students.resx">
       <DependentUpon>Students.cs</DependentUpon>
@@ -182,6 +187,7 @@
       <LastGenOutput>adminDB.designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -193,7 +199,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Images\backBtn.png" />

@@ -54,7 +54,7 @@ namespace AdminModule
     #endregion
 		
 		public adminDBDataContext() : 
-				base(global::AdminModule.Properties.Settings.Default.FASTERPConnectionString, mappingSource)
+				base(global::AdminModule.Properties.Settings.Default.FASTERPConnectionString1, mappingSource)
 		{
 			OnCreated();
 		}
@@ -1745,20 +1745,44 @@ namespace AdminModule
 	public partial class st_searchStudentResult
 	{
 		
+		private int _ID;
+		
 		private string _Sname;
 		
 		private string _Semail;
+		
+		private string _Spass;
 		
 		private string _SMN;
 		
 		private string _SrollNum;
 		
+		private int _BatchID;
+		
 		private int _BatchYrs;
+		
+		private int _ProgrammeID;
 		
 		private string _progName;
 		
 		public st_searchStudentResult()
 		{
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ID", DbType="Int NOT NULL")]
+		public int ID
+		{
+			get
+			{
+				return this._ID;
+			}
+			set
+			{
+				if ((this._ID != value))
+				{
+					this._ID = value;
+				}
+			}
 		}
 		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Sname", DbType="VarChar(50) NOT NULL", CanBeNull=false)]
@@ -1789,6 +1813,22 @@ namespace AdminModule
 				if ((this._Semail != value))
 				{
 					this._Semail = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_Spass", DbType="VarChar(255) NOT NULL", CanBeNull=false)]
+		public string Spass
+		{
+			get
+			{
+				return this._Spass;
+			}
+			set
+			{
+				if ((this._Spass != value))
+				{
+					this._Spass = value;
 				}
 			}
 		}
@@ -1825,6 +1865,22 @@ namespace AdminModule
 			}
 		}
 		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BatchID", DbType="Int NOT NULL")]
+		public int BatchID
+		{
+			get
+			{
+				return this._BatchID;
+			}
+			set
+			{
+				if ((this._BatchID != value))
+				{
+					this._BatchID = value;
+				}
+			}
+		}
+		
 		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_BatchYrs", DbType="Int NOT NULL")]
 		public int BatchYrs
 		{
@@ -1837,6 +1893,22 @@ namespace AdminModule
 				if ((this._BatchYrs != value))
 				{
 					this._BatchYrs = value;
+				}
+			}
+		}
+		
+		[global::System.Data.Linq.Mapping.ColumnAttribute(Storage="_ProgrammeID", DbType="Int NOT NULL")]
+		public int ProgrammeID
+		{
+			get
+			{
+				return this._ProgrammeID;
+			}
+			set
+			{
+				if ((this._ProgrammeID != value))
+				{
+					this._ProgrammeID = value;
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FASTERP" Class="adminDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
-  <Connection Mode="AppSettings" ConnectionString="Data Source=13.229.231.75\;Initial Catalog=FASTERP;Persist Security Info=True;User ID=iptuser" SettingsObjectName="AdminModule.Properties.Settings" SettingsPropertyName="FASTERPConnectionString" Provider="System.Data.SqlClient" />
+  <Connection Mode="AppSettings" ConnectionString="Data Source=13.229.231.75\;Initial Catalog=FASTERP;Persist Security Info=True;User ID=iptuser" SettingsObjectName="AdminModule.Properties.Settings" SettingsPropertyName="FASTERPConnectionString1" Provider="System.Data.SqlClient" />
   <Table Name="dbo.Batch" Member="Batches">
     <Type Name="Batch">
       <Column Name="BatchID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
@@ -101,11 +101,15 @@
   <Function Name="dbo.st_searchStudent" Method="st_searchStudent">
     <Parameter Name="data" Type="System.String" DbType="VarChar(100)" />
     <ElementType Name="st_searchStudentResult">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="Sname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
       <Column Name="Semail" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Spass" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
       <Column Name="SMN" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
       <Column Name="SrollNum" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="BatchID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="BatchYrs" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="ProgrammeID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
       <Column Name="progName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
     </ElementType>
   </Function>
