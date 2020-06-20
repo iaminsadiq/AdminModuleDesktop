@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="FASTERP" Class="adminDBDataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=13.229.231.75\;Initial Catalog=FASTERP;Persist Security Info=True;User ID=iptuser" SettingsObjectName="AdminModule.Properties.Settings" SettingsPropertyName="FASTERPConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.Batch" Member="Batches">
+    <Type Name="Batch">
+      <Column Name="BatchID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="BatchName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="BatchYear" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Batch_Student" Member="Students" ThisKey="BatchID" OtherKey="BatchID" Type="Student" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Student" Member="Students">
+    <Type Name="Student">
+      <Column Name="StudentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="SName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="MobileNumber" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="RollNumber" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="CandidateID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="BatchID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="SPassword" Type="System.String" DbType="VarChar(255) NOT NULL" CanBeNull="false" />
+      <Column Name="ProgrammeID" Type="System.Int32" DbType="Int" CanBeNull="true" />
+      <Association Name="Batch_Student" Member="Batch" ThisKey="BatchID" OtherKey="BatchID" Type="Batch" IsForeignKey="true" />
+      <Association Name="Programme_Student" Member="Programme" ThisKey="ProgrammeID" OtherKey="ProgrammeID" Type="Programme" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Programme" Member="Programmes">
+    <Type Name="Programme">
+      <Column Name="ProgrammeID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="ProgrammeName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Association Name="Programme_Student" Member="Students" ThisKey="ProgrammeID" OtherKey="ProgrammeID" Type="Student" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Course" Member="Courses">
+    <Type Name="Course">
+      <Column Name="CourseID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="CourseName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="CourseCode" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Designation" Member="Designations">
+    <Type Name="Designation">
+      <Column Name="DesignationID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DesignationTitle" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Designation_Employee" Member="Employees" ThisKey="DesignationID" OtherKey="DesignationID" Type="Employee" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Department" Member="Departments">
+    <Type Name="Department">
+      <Column Name="DepartmentID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="DepartmentName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Department_Employee" Member="Employees" ThisKey="DepartmentID" OtherKey="DepartmentID" Type="Employee" />
+    </Type>
+  </Table>
+  <Table Name="dbo.Employee" Member="Employees">
+    <Type Name="Employee">
+      <Column Name="EmpID" Type="System.Int32" DbType="Int NOT NULL IDENTITY" IsPrimaryKey="true" IsDbGenerated="true" CanBeNull="false" />
+      <Column Name="EmpName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Email" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="MobileNumber" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="DesignationID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="RefID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EPassword" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Association Name="Department_Employee" Member="Department" ThisKey="DepartmentID" OtherKey="DepartmentID" Type="Department" IsForeignKey="true" />
+      <Association Name="Designation_Employee" Member="Designation" ThisKey="DesignationID" OtherKey="DesignationID" Type="Designation" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.emp_getEmployeeLogin" Method="emp_getEmployeeLogin">
+    <Parameter Name="email" Type="System.String" DbType="VarChar(20)" />
+    <Parameter Name="password" Type="System.String" DbType="VarChar(20)" />
+    <ElementType Name="emp_getEmployeeLoginResult">
+      <Column Name="EmpID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EmpName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpEmail" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpMobileNumber" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpPassword" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpDesignation" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.co_searchCourse" Method="co_searchCourse">
+    <Parameter Name="data" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="co_searchCourseResult">
+      <Column Name="ID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="Name" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Code" Type="System.String" DbType="VarChar(10) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.emp_searchEmployee" Method="emp_searchEmployee">
+    <Parameter Name="data" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="emp_searchEmployeeResult">
+      <Column Name="EmpID" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="EmpName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpEmail" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpMobileNumber" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpPassword" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="EmpDesignation" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="DepartmentName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+  <Function Name="dbo.st_searchStudent" Method="st_searchStudent">
+    <Parameter Name="data" Type="System.String" DbType="VarChar(100)" />
+    <ElementType Name="st_searchStudentResult">
+      <Column Name="Sname" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="Semail" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="SMN" Type="System.String" DbType="VarChar(11) NOT NULL" CanBeNull="false" />
+      <Column Name="SrollNum" Type="System.String" DbType="VarChar(7) NOT NULL" CanBeNull="false" />
+      <Column Name="BatchYrs" Type="System.Int32" DbType="Int NOT NULL" CanBeNull="false" />
+      <Column Name="progName" Type="System.String" DbType="VarChar(50) NOT NULL" CanBeNull="false" />
+    </ElementType>
+  </Function>
+</Database>
